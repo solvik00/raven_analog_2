@@ -1,0 +1,30 @@
+<launch>
+  <!-- Argument to define the initial x-position of the robot in the Gazebo world -->
+  <arg name="x_pos" default="0.0"/>
+  <!-- Argument to define the initial y-position of the robot in the Gazebo world -->
+  <arg name="y_pos" default="0.0"/>
+  <!-- Argument to define the initial z-position of the robot in the Gazebo world -->
+  <arg name="z_pos" default="0.0"/>
+
+  <!-- Include the launch file to start an empty Gazebo world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- Specify the world file to be used -->
+    <arg name="world_name" value="$(find mesr_gazebo)/worlds/empty.world"/>
+    <!-- Specify if the simulation should start paused -->
+    <arg name="paused" value="false"/>
+    <!-- Specify if the simulation time should be used -->
+    <arg name="use_sim_time" value="true"/>
+    <!-- Specify if the Gazebo GUI should be shown -->
+    <arg name="gui" value="true"/>
+    <!-- Specify if Gazebo should be started in headless mode -->
+    <arg name="headless" value="false"/>
+    <!-- Specify if Gazebo should be started in debug mode -->
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Load the URDF model of the robot into the parameter server. The model is defined in the mesr.urdf.xacro file in the mesr_description package -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find mesr_description)/urdf/mesr.urdf.xacro" />
+
+  <!-- Spawn the URDF model in Gazebo at the position defined by the x_pos, y_pos, and z_pos arguments -->
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model mesr -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+</launch>

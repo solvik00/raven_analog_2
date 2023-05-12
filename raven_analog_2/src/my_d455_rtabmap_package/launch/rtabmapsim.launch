@@ -1,0 +1,25 @@
+
+<!-- An attempt to simulate a stereo camera, does not work -->
+<launch>
+  <!-- RGB republish -->
+  <node pkg="image_transport" type="republish" name="rgb_republish" args="raw in:=/camera/color/image_raw raw out:=/camera/color/image_raw"/>
+
+  <!-- Depth republish -->
+  <node pkg="image_transport" type="republish" name="depth_republish" args="raw in:=/camera/depth/image_raw raw out:=/camera/depth/image_raw"/>
+
+  <!-- Camera info relay -->
+  <node pkg="topic_tools" type="relay" name="camera_info_republish" args="/camera/color/camera_info /camera/color/camera_info"/>
+
+  <!-- rtabmap_ros -->
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+    <arg name="rtabmap_args" value="--delete_db_on_start"/>
+    <arg name="depth_topic" value="/camera/depth/image_raw"/>
+    <arg name="rgb_topic" value="/camera/color/image_raw"/>
+    <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+    <arg name="approx_sync" value="true"/>
+    <arg name="queue_size" value="30"/>
+    <arg name="approx_sync_max_interval" value="0.01"/>
+    <param name="publish_tf" value="true"/>
+    <param name="tf_buffer_size" type="double" value="10.0"/>
+  </include>
+</launch>

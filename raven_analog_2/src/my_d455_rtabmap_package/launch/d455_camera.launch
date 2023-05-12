@@ -1,0 +1,28 @@
+<!-- This is a ROS launch file -->
+<launch>
+  <!-- Include the rs_camera.launch file from the realsense2_camera package -->
+  <!-- This launch file is part of the realsense2_camera package which provides drivers for the RealSense camera -->
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <!-- Configure the camera to align the depth image with the color image -->
+    <!-- This helps in matching depth and color information for the same pixel -->
+    <arg name="align_depth" value="true"/>
+    
+    <!-- Set the resolution of the color image to 1280x720 pixels -->
+    <!-- This defines the width and height of the color image produced by the RealSense camera -->
+    <arg name="color_width" value="1280"/>
+    <arg name="color_height" value="720"/>
+    
+    <!-- Set the frame rate of the color image to 30 frames per second -->
+    <!-- This defines how many color images the RealSense camera produces in one second -->
+    <arg name="color_fps" value="30"/>
+    
+    <!-- Set the resolution of the depth image to 1280x720 pixels -->
+    <!-- This defines the width and height of the depth image produced by the RealSense camera -->
+    <arg name="depth_width" value="1280"/>
+    <arg name="depth_height" value="720"/>
+    
+    <!-- Set the frame rate of the depth image to 30 frames per second -->
+    <!-- This defines how many depth images the RealSense camera produces in one second -->
+    <arg name="depth_fps" value="30"/>
+  </include>
+</launch>

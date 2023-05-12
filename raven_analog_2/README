@@ -1,0 +1,94 @@
+Project Repository Guide
+
+Welcome! This repository is equipped with all necessary materials for managing the CAD files, ROS noetic packages, and unique launch files for the physical analog rover and the virtual analog rover.
+Directory Structure
+
+The repository comprises three main directories:
+
+    Assembly: Holds all CAD and drawing files required for the project.
+    src: Contains two packages, including the 'my_d455_rtabmap_package' and 'mesr_sim'. Further details below.
+    testing: Incorporates 2 ROS packages intended for testing.
+
+Assembly
+
+The Assembly directory is a repository for all project-related CAD files and drawings.
+src
+
+The src directory contains two ROS packages:
+
+    my_d455_rtabmap_package: This package is designed to facilitate the integration of a d455 realsense camera with rtabmap. It includes four distinct launch files:
+        d455_camera.launch: This employs the realsense2_camera package, tailored specifically for the d455 stereo camera.
+        d455_camera_compressed: This functions similarly to d455_camera.launch, but with additional capabilities to compress the RGB image and the depth image, utilizing the image_transport package.
+        rtabmap.launch: This initiates rtabmap with custom parameters, specifically designed to handle the data stream from d455_camera.launch.
+        rtabmap_decompress.launch: This operates similarly to rtabmap.launch, but it is adapted for d455_camera_compressed.launch. This means it decompresses the data before RTabMap processes it.
+
+    mesr_sim: This package focuses on the simulation of the virtual analog rover in Gazebo. It encompasses three launch files:
+        mesr_empty_world.launch: This launches the virtual analog rover into an empty world in Gazebo.
+        mesr_playground.launch: This introduces the virtual analog rover into a custom-made environment in Gazebo.
+        rviz_mesr: This launches rtabmap.launch from the my_d455_rtabmap_package and RViz. It visualizes data received from a d455 camera and introduces the virtual analog rover into the rendered environment within RViz.
+
+testing
+
+The testing directory houses 2 ROS packages:
+
+    RVIZ transform: This package seeks to intercept data flowing between RTabMap and RViz to elevate the pointcloud.
+    turtlebot3_kinect_launch: This package strives to activate gazebo, spawn a turtlebot3 with a Kinect camera on it, and publish the right topics for RTabMap to receive the pointcloud data.
+
+Usage Instructions
+
+Move the src folder to your catkin workspace and compile using $catkin_make.
+
+Physical Analog Rover
+
+To operate the physical analog rover, use the following commands in your terminal:
+
+
+$ roscore # to start the ROS_Master
+$ roslaunch turtlebot_bringup minimal.launch
+$ roslaunch turtlebot_teleop keyboard_teleop.launch
+$ roslaunch my_d455_rtabmap_package d455_camera.launch # or d455_camera_compressed.launch
+$ roslaunch mesr_gazebo rviz_mesr.launch
+
+Virtual Analog Rover
+
+For the virtual analog rover, use the following commands:
+
+
+$ roslaunch mesr_gazebo mesr_empty_world.launch # for an empty world with the virtual analog rover
+$ roslaunch mesr_gazebo mesr_playground.launch # for a custom made world with the virtual analog rover
+
+Please ensure you have ROS properly installed and configured before starting. Enjoy exploring the project!
+
+License
+
+Apache 2.0
+
+  Copyright 2023 Baldur Logi Gautason, Eva María Hönnudóttir Sigurþórsdóttir, Sölvi Karl Einarsson, Unnar Freyr Arnþórsson
+
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+Some of this code is based on the Kobuki repository
+https://github.com/yujinrobot/kobuki.git
+
+  Copyright 2021 YujinRobot
+
+  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

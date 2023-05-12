@@ -1,0 +1,22 @@
+<launch>
+  <!-- Load the TurtleBot3 environment -->
+  <!-- This line will include the launch file 'turtlebot3_world.launch' from the package 'turtlebot3_gazebo'. This will start the Gazebo simulation with a specific world environment designed for the TurtleBot3 robot. -->
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_world.launch"/>
+
+  <!-- Spawn the custom TurtleBot3 model -->
+  <!-- The following arguments define the URDF model to be loaded and the initial position (x, y, z) where the robot should be spawned in the Gazebo environment. -->
+  <arg name="model" default="$(find turtlebot3_kinect_launch)/urdf/turtlebot3_kinect.urdf.xacro"/>
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0.1"/>
+
+  <!-- This line will convert the Xacro file to URDF using the 'xacro' command and set the result as the 'robot_description' parameter, which is commonly used to store the robot model in ROS. -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+
+  <!-- This node will spawn the defined URDF model in the Gazebo simulation at the specified position. The model is given the name 'turtlebot3_kinect'. -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_kinect -param robot_description -x $(arg x) -y $(arg y) -z $(arg z)" respawn="false" output="screen"/>
+
+  <!-- Start RViz -->
+  <!-- This node will start the RViz visualization tool with a preconfigured setup defined in the 'turtlebot3_kinect.rviz' file. If this node crashes or is manually shut down, the entire launch will be stopped due to the 'required="true"' attribute. -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find turtlebot3_kinect_launch)/rviz/turtlebot3_kinect.rviz" required="true"/>
+</launch>

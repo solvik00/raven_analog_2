@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="kinect" params="parent">
+    <link name="kinect_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.1 0.1 0.1"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+    </link>
+
+    <joint name="kinect_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.2" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="kinect_link"/>
+    </joint>
+
+    <gazebo reference="kinect_link">
+      <sensor name="kinect_depth" type="depth">
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>10.0</far>
+          </clip>
+        </camera>
+        <plugin name="gazebo_ros_openni_kinect" filename="libgazebo_ros_openni_kinect.so">
+          <cameraName>camera</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>30.0</updateRate>
+          <depthCamera>
+            <outputType>points</outputType>
+          </depthCamera>
+          <pointCloudCutoff>0.4</pointCloudCutoff>
+          <pointCloudCutoffMax>10.0</pointCloudCutoffMax>
+          <robotNamespace>/</robotNamespace>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

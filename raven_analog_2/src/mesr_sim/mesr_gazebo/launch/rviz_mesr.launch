@@ -1,0 +1,27 @@
+<launch>
+  <!-- The 'model' argument holds the path to the URDF file of the robot. -->
+  <arg name="model" default="$(find mesr_description)/urdf/mesr.urdf.xacro"/>
+  
+  <!-- Load the URDF model from the 'model' argument into the parameter server under the name 'robot_description'. -->
+  <param name="robot_description" textfile="$(arg model)"/>
+
+  <!-- Launch the 'robot_state_publisher' node from the 'robot_state_publisher' package. This node will read the 'robot_description' from the parameter server and publish the state of the robot to the '/tf' topic. -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Launch the 'joint_state_publisher' node from the 'joint_state_publisher' package. This node will read the joint angles from the 'robot_description' and publish them to the '/joint_states' topic. -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+  <!-- Include the 'rtabmap' launch file from the 'my_d455_rtabmap_package' package. This launch file starts the RTAB-Map SLAM system. -->
+  <include file="$(find my_d455_rtabmap_package)/launch/rtabmap.launch">
+    <!-- Set the frame_id of the map to be 'shifted_map'. -->
+    <param name="map_frame_id" value="shifted_map" />
+    <!-- Set the frame_id of the odometry to be 'shifted_odom'. -->
+    <param name="odom_frame_id" value="shifted_odom" />
+  </include>
+
+  <!-- Launch the 'map_cloud_transform' node from the 'custom_rviz_plugin' package. This node applies a transformation to the point cloud map. -->
+  <node name="map_cloud_transform" pkg="custom_rviz_plugin" type="map_cloud_transform.py" />
+
+  <!-- Launch RViz with the configuration file specified. -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mesr_description)/rviz/mesr.rviz" />
+</launch>

@@ -1,0 +1,36 @@
+<!-- ROS launch file -->
+<launch>
+  <!-- Node to republish the RGB image from a raw format to a compressed format -->
+  <!-- This can be useful to save bandwidth when transmitting the image over a network -->
+  <node pkg="image_transport" type="republish" name="rgb_republish" args="raw in:=/camera/color/image_raw compressed out:=/camera/color/image_raw/compressed"/>
+  
+  <!-- Node to republish the depth image from a raw format to a compressed depth format -->
+  <!-- This can also be useful to save bandwidth when transmitting the image over a network -->
+  <node pkg="image_transport" type="republish" name="depth_republish" args="raw in:=/camera/aligned_depth_to_color/image_raw compressedDepth out:=/camera/aligned_depth_to_color/image_raw/compressedDepth"/>
+
+  <!-- Include the rtabmap.launch file from the rtabmap_ros package -->
+  <!-- rtabmap_ros provides a ROS interface for RTAB-Map, a RGB-D SLAM approach -->
+   <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+    <!-- Delete the RTAB-Map database at the start of execution -->
+    <!-- This is useful if you want to start mapping from scratch -->
+    <arg name="rtabmap_args" value="--delete_db_on_start"/>
+    
+    <!-- Specify the topic to subscribe for depth images -->
+    <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+    
+    <!-- Specify the topic to subscribe for RGB images -->
+    <arg name="rgb_topic" value="/camera/color/image_raw"/>
+    
+    <!-- Specify the topic to subscribe for camera information -->
+    <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+    
+    <!-- Specify whether to use approximate synchronization for input topics -->
+    <arg name="approx_sync" value="true"/>
+    
+    <!-- Specify the queue size for message synchronization -->
+    <arg name="queue_size" value="30"/>
+    
+    <!-- Specify the maximum interval (in seconds) between messages to be considered approximately synchronized -->
+    <arg name="approx_sync_max_interval" value="0.5"/>
+   </include>
+</launch>

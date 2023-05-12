@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>my_d455_rtabmap_package</name>
+  <version>0.0.1</version>
+  <description>Custom package to launch Intel RealSense D455 camera and RTAB-Map</description>
+
+  <maintainer email="solvi19@ru.is">Solvi Karl Einarsson</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>roslaunch</exec_depend>
+  <exec_depend>realsense2_camera</exec_depend>
+  <exec_depend>rtabmap_ros</exec_depend>
+</package>

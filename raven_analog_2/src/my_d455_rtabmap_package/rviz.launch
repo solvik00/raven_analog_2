@@ -1,0 +1,6 @@
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(dirname)/d455_rviz_config.rviz" />
+  
+  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -model mesr.urdf.xacro -param robot_description" />
+</launch>
+

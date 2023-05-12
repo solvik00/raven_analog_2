@@ -1,0 +1,39 @@
+<!-- ROS launch file -->
+<launch>
+  <!-- Include the rtabmap.launch file from the rtabmap_ros package -->
+  <!-- rtabmap_ros provides a ROS interface for RTAB-Map, a RGB-D SLAM approach -->
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+    <!-- Delete the RTAB-Map database at the start of execution -->
+    <!-- This is useful if you want to start mapping from scratch -->
+    <arg name="rtabmap_args" value="--delete_db_on_start"/>
+    
+    <!-- Specify the topic to subscribe for RGB images -->
+    <arg name="rgb_topic" value="/camera/color/image_raw"/>
+    
+    <!-- Specify the topic to subscribe for depth images -->
+    <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+    
+    <!-- Specify the topic to subscribe for camera information -->
+    <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+    
+    <!-- Specify whether to use approximate synchronization for input topics -->
+    <arg name="approx_sync" value="false"/>
+    
+    <!-- Specify the queue size for message synchronization -->
+    <arg name="queue_size" value="30"/>
+    
+    <!-- Specify the maximum interval (in seconds) between messages to be considered approximately synchronized -->
+    <arg name="approx_sync_max_interval" value="0.5"/>
+  </include>
+
+  <!-- Node to republish the RGB image from a compressed format to a raw format -->
+  <node pkg="image_transport" type="republish" name="rgb_republisher" args="compressed in:=/camera/color/image_raw/compressed raw out:=/camera/color/image_raw" />
+  
+  <!-- Node to republish the depth image from a compressed format to a raw format -->
+  <node pkg="image_transport" type="republish" name="depth_republisher" args="compressedDepth in:=/camera/aligned_depth_to_color/image_raw/compressed raw out:=/camera/aligned_depth_to_color/image_raw" />
+  
+  <!-- Remap the topic names for the RGB and depth images -->
+  <!-- This ensures that the RTAB-Map node subscribes to the republished topics -->
+  <remap from="/camera/color/image_raw" to="/camera/color/image_raw/compressed"/>
+  <remap from="/camera/aligned_depth_to_color/image_raw" to="/camera/aligned_depth_to_color/image_raw/compressed"/>
+</launch>

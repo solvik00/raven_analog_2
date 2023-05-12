@@ -1,0 +1,28 @@
+<!-- This is a ROS launch file -->
+<launch>
+  <!-- Include another launch file from realsense2_camera package -->
+  <!-- The realsense2_camera package provides drivers for the RealSense camera -->
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <!-- Configure the camera to align the depth image with the color image -->
+    <arg name="align_depth" value="true"/>
+    <!-- Set the resolution and frame rate of the color image -->
+    <arg name="color_width" value="1280"/>
+    <arg name="color_height" value="720"/>
+    <arg name="color_fps" value="30"/>
+    <!-- Set the resolution and frame rate of the depth image -->
+    <arg name="depth_width" value="1280"/>
+    <arg name="depth_height" value="720"/>
+    <arg name="depth_fps" value="30"/>
+  </include>
+
+  <!-- Start a node to republish the color image in a compressed format -->
+  <!-- This can be useful to save bandwidth when transmitting the image over a network -->
+  <node name="color_image_transport" pkg="image_transport" type="republish" args="raw in:=/camera/color/image_raw compressed out:=/camera/color/image_raw/compressed"/>
+  
+  <!-- Start a node to republish the aligned depth image in a compressed format -->
+  <!-- This can also be useful to save bandwidth when transmitting the image over a network -->
+  <!-- For some reason compressing depth images slows down the data rate -->
+  <node name="depth_image_transport" pkg="image_transport" type="republish" args="raw in:=/camera/aligned_depth_to_color/image_raw compressedDepth out:=/camera/aligned_depth_to_color/image_raw/compressed"/>
+
+
+</launch>
